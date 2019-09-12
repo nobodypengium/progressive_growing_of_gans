@@ -45,7 +45,7 @@ def generate_fake_images(run_id, snapshot=None, grid_size=[1,1], num_pngs=1, ima
 
 #----------------------------------------------------------------------------
 # Generate MP4 video of random interpolations using a previously trained network.
-# To run, uncomment the appropriate line in config.py and launch train.py.
+# To run, uncomment the appropriate line in config.py and launch train.py. 插值网络
 
 def generate_interpolation_video(run_id, snapshot=None, grid_size=[1,1], image_shrink=1, image_zoom=1, duration_sec=60.0, smoothing_sec=1.0, mp4=None, mp4_fps=30, mp4_codec='libx265', mp4_bitrate='16M', random_seed=1000, minibatch_size=8):
     network_pkl = misc.locate_network_pkl(run_id, snapshot)
@@ -94,7 +94,7 @@ def generate_training_video(run_id, duration_sec=20.0, time_warp=1.5, mp4=None, 
     # Parse log.
     times = []
     snaps = [] # [(png, kimg, lod), ...]
-    with open(os.path.join(src_result_subdir, 'log.txt'), 'rt') as log:
+    with open(os.path.join(src_result_subdir, 'log.txt'), 'rt') as log: #TODO:LOG存储的是什么 读文件中的“图片”然后制作视频，并非实时经由模型生成
         for line in log:
             k = re.search(r'kimg ([\d\.]+) ', line)
             l = re.search(r'lod ([\d\.]+) ', line)
