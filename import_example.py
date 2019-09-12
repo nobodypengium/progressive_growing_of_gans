@@ -5,13 +5,13 @@ import PIL.Image
 import os
 
 #设置GPU可见
-os.environ["CUDA_VISIBLE_DEVICES"] = "3"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 # Initialize TensorFlow session.
 tf.InteractiveSession()
 
 # Import official CelebA-HQ networks.
-with open('pretrained_models/karras2018iclr-lsun-churchoutdoor-256x256.pkl', 'rb') as file:
+with open('pretrained_models/karras2018iclr-celebahq-1024x1024.pkl', 'rb') as file:
     G, D, Gs = pickle.load(file)
 
 # Generate latent vectors.
@@ -30,4 +30,4 @@ images = images.transpose(0, 2, 3, 1) # NCHW => NHWC
 
 # Save images as PNG.
 for idx in range(images.shape[0]):
-    PIL.Image.fromarray(images[idx], 'RGB').save('samples/lsun_churchoutdoor_256\img%d.png' % idx)
+    PIL.Image.fromarray(images[idx], 'RGB').save('samples/celebA_sample/img%d.png' % idx)

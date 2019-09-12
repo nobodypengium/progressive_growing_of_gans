@@ -15,6 +15,9 @@ import traceback
 import numpy as np
 import tensorflow as tf
 import PIL.Image
+from tqdm import tqdm
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 import tfutil
 import dataset
@@ -195,16 +198,18 @@ def display(tfrecord_dir):
     idx = 0
     while True:
         try:
-            images, labels = dset.get_minibatch_np(1)
+            images, labels = dset.get_minibatch_np(minibatch_size=1,lod=0)
         except tf.errors.OutOfRangeError:
             break
         if idx == 0:
             print('Displaying images')
             import cv2 # pip install opencv-python
+            # import matplotlib.pyplot as plt
             cv2.namedWindow('dataset_tool')
             print('Press SPACE or ENTER to advance, ESC to exit')
         print('\nidx = %-8d\nlabel = %s' % (idx, labels[0].tolist()))
         cv2.imshow('dataset_tool', images[0].transpose(1, 2, 0)[:, :, ::-1]) # CHW => HWC, RGB => BGR
+        # plt.imshow(images[0].transpose(1, 2, 0))
         idx += 1
         if cv2.waitKey() == 27:
             break
@@ -442,7 +447,7 @@ def create_celeba(tfrecord_dir, celeba_dir, cx=89, cy=121):
     
     with TFRecordExporter(tfrecord_dir, len(image_filenames)) as tfr:
         order = tfr.choose_shuffled_order()
-        for idx in range(order.size):
+        for idx in tqdm(range(order.size)):
             img = np.asarray(PIL.Image.open(image_filenames[order[idx]]))
             assert img.shape == (218, 178, 3)
             img = img[cy - 64 : cy + 64, cx - 64 : cx + 64]
